@@ -2,7 +2,7 @@ const $ = s => document.querySelector(s);
 const base = 'https://github.com/suryawinaldi/';
 const projects = [
  ['Olist E-commerce','Analisis data','SQL · POWER BI','olist-ecommerce-analysis','6,77% pesanan layak ukur tiba melewati estimasi.','Dari 96.470 pesanan yang dapat dibandingkan dengan estimasi, 6.534 datang terlambat. Analisis memisahkan waktu sebelum dan setelah serah terima untuk menelusuri sumber keterlambatan.','olist'],
- ['Online Retail II','Analisis data','SQL · PYTHON · EXCEL','retail-customer-retention-analysis','68,39% nilai pembelian positif berasal dari pelanggan loyal aktif.','Pada Desember 2010–November 2011, 1.161 dari 4.293 pelanggan termasuk segmen loyal aktif berdasarkan waktu sejak pembelian terakhir dan frekuensi transaksi. Nilai pembelian dihitung sebelum kredit.'],
+ ['Online Retail II','Analisis data','SQL · PYTHON · EXCEL','retail-customer-retention-analysis','68,39% nilai pembelian positif berasal dari pelanggan loyal aktif.','Pada Desember 2010–November 2011, 1.161 dari 4.293 pelanggan termasuk segmen loyal aktif berdasarkan waktu sejak pembelian terakhir dan frekuensi transaksi. Nilai pembelian dihitung sebelum kredit.','retail'],
  ['Mobile Legends','Analisis data','NLP · SCIKIT-LEARN','UTS-Analisis-Data-Tidak-Terstruktur-Sentiment-Analysis-MLBB','Seberapa baik teks ulasan memprediksi rating pemain?','Model mencapai macro F1 0,634 pada 3.321 teks unik bulan Juni. Baseline mayoritas mencapai 0,189. Hanya 30,4% ulasan berbintang tiga dikenali dengan benar.','mlbb'],
  ['World Happiness','Analisis data','PYTHON · ANALISIS PANEL','world-happiness-analysis','Membandingkan perubahan evaluasi hidup di 143 negara.','Dari 2017–2019 ke 2023–2025, rerata skor naik 0,102 poin pada panel negara yang sama dengan bobot setara. Perubahan Indonesia mencapai +0,331 poin.','happiness'],
  ['Pojok Statistik UI','Aplikasi','JAVASCRIPT · SUPABASE','absensi-pojok-statistik-ui','Workspace pengelolaan jadwal, agen, dan kehadiran.','Aplikasi menyatukan jadwal bertanggal, pencatatan kehadiran, layanan daring, dan materi privat dalam satu ruang kerja admin.'],
@@ -23,7 +23,36 @@ function draw(t=0){
 function redraw(){cancelAnimationFrame(frame);draw(motion.matches?0:performance.now())}
 new ResizeObserver(redraw).observe(wave);new IntersectionObserver(([e])=>{visible=e.isIntersecting;redraw()}).observe(wave);motion.addEventListener('change',redraw);document.addEventListener('visibilitychange',redraw);
 const dialog=$('dialog');
-function openProject(p){$('#dtype').textContent=p[2];$('#dtitle').textContent=p[0];$('#desc').textContent=p[5];$('#source').href=base+p[3];const img=$('#plot');img.hidden=!p[6];if(p[6]){img.src='assets/'+p[6]+'.webp';img.alt='Grafik hasil analisis '+p[0]}dialog.showModal()}
+const resources = {
+  olist: [['Laporan Power BI (PDF)', 'report/Laporan_Olist_PowerBI.pdf']],
+  retail: [
+    ['Jelajahi dashboard', './dashboard/retail/'],
+    ['Laporan retensi (PDF)', 'reports/Laporan_Retensi_Pelanggan.pdf']
+  ],
+  mlbb: [['Baca notebook evaluasi model', 'notebooks/01_mobile_legends_reviews.ipynb']],
+  happiness: [['Laporan World Happiness (PDF)', 'reports/Laporan_World_Happiness_Analysis.pdf']]
+};
+
+function openProject([title, , tools, repo, , summary, chart]) {
+  $('#dtype').textContent = tools;
+  $('#dtitle').textContent = title;
+  $('#desc').textContent = summary;
+  $('#source').href = base + repo;
+  const img = $('#plot');
+  img.hidden = !chart;
+  if (chart) {
+    img.src = 'assets/' + chart + '.webp';
+    img.alt = 'Grafik hasil analisis ' + title;
+  }
+  const links = (resources[chart] || []).map(([label, path]) => {
+    const link = document.createElement('a');
+    link.textContent = label + ' ↗';
+    link.href = path.startsWith('./') ? path : base + repo + '/blob/main/' + path;
+    return link;
+  });
+  $('#resources').replaceChildren(...links);
+  dialog.showModal();
+}
 $('#close').onclick=()=>dialog.close();
 for (const project of projects) {
   const [title, category, tools, , summary, , chart] = project;
@@ -36,11 +65,6 @@ for (const project of projects) {
     image.src = 'assets/' + chart + '.webp';
     image.alt = 'Grafik' + ' ' + title;
     card.append(image);
-  } else if (analysis) {
-    const figure = document.createElement('div');
-    figure.className = 'retail-figure';
-    figure.innerHTML = '<strong>68,39%</strong><span>Kontribusi pelanggan loyal aktif</span><meter min="0" max="100" value="68.39" aria-label="Persentase nilai pembelian positif"></meter>';
-    card.append(figure);
   }
   const body = document.createElement('div');
   body.className = 'copy';

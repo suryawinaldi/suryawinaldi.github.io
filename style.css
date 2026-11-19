@@ -11,3 +11,7 @@ img.cover{object-fit:contain;background:#fffaf4}
 .other-project{border:0;border-top:1px solid var(--line);background:none;text-align:left;padding:0}
 .other-project .copy{padding:16px 0}.other-project h3{margin:7px 0}.other-project p{color:var(--muted);font-size:14px}
 @media(max-width:650px){#cards,#other-projects{grid-template-columns:1fr}}
+#resources{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#resources a,.profile-link{display:inline-block;padding:8px 14px;border-radius:20px;border:1px solid #718460}
+#resources a:hover,.profile-link:hover{color:var(--lime);border-color:var(--lime)}
+.profile-link{margin-top:20px}
