@@ -22,21 +22,37 @@ function draw(t=0){
 }
 function redraw(){cancelAnimationFrame(frame);draw(motion.matches?0:performance.now())}
 new ResizeObserver(redraw).observe(wave);new IntersectionObserver(([e])=>{visible=e.isIntersecting;redraw()}).observe(wave);motion.addEventListener('change',redraw);document.addEventListener('visibilitychange',redraw);
-const colors=[['#183f3d','#85e4cf'],['#572e20','#f5b37e'],['#342b57','#bfaaef'],['#234c60','#93dcf1'],['#354622','#c9e99f'],['#4b2647','#eba2d4'],['#3d3f58','#c8c9ef']];
-function cover(i){
- const c=document.createElement('canvas');c.className='cover';c.width=700;c.height=360;c.setAttribute('aria-hidden','true');const g=c.getContext('2d'),[bg,fg]=colors[i];g.fillStyle=bg;g.fillRect(0,0,700,360);g.fillStyle=fg;
- for(let y=12;y<360;y+=24)for(let x=12;x<700;x+=24){g.globalAlpha=.22;g.fillRect(x,y,2,2)}
- g.globalAlpha=.9;g.strokeStyle=fg;g.lineWidth=3;
- if(i===1){for(let j=0;j<6;j++){g.globalAlpha=.24+j*.12;g.beginPath();g.ellipse(340+j*16,180,185-j*21,118-j*12,-.25,0,Math.PI*2);g.stroke()}}
- else if(i===2||i===4){for(let j=0;j<9;j++)for(let k=0;k<15;k++){g.globalAlpha=.15+.8*(1+Math.sin(j*.8+k*.45+i))/2;g.fillRect(117+k*31,57+j*28,23,20)}}
- else if(i===5||i===6){for(let j=0;j<16;j++){g.save();g.translate(350,180);g.rotate(j*.075);g.strokeRect(-95+j*2,-95+j*2,190-j*4,190-j*4);g.restore()}}
- else{for(let j=0;j<23;j++){g.beginPath();for(let x=0;x<=700;x+=5){const y=175+Math.sin(x/100+j*.1+i)*57+Math.sin(x/68-j*.1)*36+(j-11)*4;x?g.lineTo(x,y):g.moveTo(x,y)}g.stroke()}}return c
-}
 const dialog=$('dialog');
 function openProject(p){$('#dtype').textContent=p[2];$('#dtitle').textContent=p[0];$('#desc').textContent=p[5];$('#source').href=base+p[3];const img=$('#plot');img.hidden=!p[6];if(p[6]){img.src='assets/'+p[6]+'.webp';img.alt='Grafik hasil analisis '+p[0]}dialog.showModal()}
 $('#close').onclick=()=>dialog.close();
-function render(filter){$('#cards').replaceChildren();projects.forEach((p,i)=>{if(filter!=='Semua'&&filter!==p[1])return;const b=document.createElement('button');b.className='card';b.append(cover(i));const body=document.createElement('div');body.className='copy';body.innerHTML='<span class="tools"></span><h3></h3><p></p><span class="link">Lihat proyek ↗</span>';body.children[0].textContent=p[2];body.children[1].textContent=p[0];body.children[2].textContent=p[4];b.append(body);b.onclick=()=>openProject(p);$('#cards').append(b)});for(const b of $('#filters').children)b.setAttribute('aria-pressed',b.textContent===filter)}
-for(const f of ['Semua','Analisis data','Aplikasi']){const b=document.createElement('button');b.textContent=f;b.onclick=()=>render(f);$('#filters').append(b)}render('Semua');
+for (const project of projects) {
+  const [title, category, tools, , summary, , chart] = project;
+  const analysis = category === 'Analisis data';
+  const card = document.createElement('button');
+  card.className = analysis ? 'card' : 'other-project';
+  if (chart) {
+    const image = document.createElement('img');
+    image.className = 'cover';
+    image.src = 'assets/' + chart + '.webp';
+    image.alt = 'Grafik' + ' ' + title;
+    card.append(image);
+  } else if (analysis) {
+    const figure = document.createElement('div');
+    figure.className = 'retail-figure';
+    figure.innerHTML = '<strong>68,39%</strong><span>Kontribusi pelanggan loyal aktif</span><meter min="0" max="100" value="68.39" aria-label="Persentase nilai pembelian positif"></meter>';
+    card.append(figure);
+  }
+  const body = document.createElement('div');
+  body.className = 'copy';
+  body.innerHTML = '<span class="tools"></span><h3></h3><p></p><span class="link"></span>';
+  body.querySelector('.tools').textContent = tools;
+  body.querySelector('h3').textContent = title;
+  body.querySelector('p').textContent = summary;
+  body.querySelector('.link').textContent = analysis ? 'Baca analisis ↗' : 'Detail proyek ↗';
+  card.append(body);
+  card.onclick = () => openProject(project);
+  $(analysis ? '#cards' : '#other-projects').append(card);
+}
 function showRepos(names){$('#repos').replaceChildren(...names.map(name=>{const a=document.createElement('a');a.href=base+encodeURIComponent(name);a.textContent=name+' ↗';return a}))}
 showRepos([...projects.map(p=>p[3]),'suryawinaldi.github.io']);$('#status').textContent='Repositori dalam portofolio ini.';
 (async()=>{try{const names=[];for(let page=1;;page++){const r=await fetch('https://api.github.com/users/suryawinaldi/repos?per_page=100&sort=updated&page='+page,{signal:AbortSignal.timeout(8000)});if(!r.ok)throw Error();const rows=await r.json();names.push(...rows.map(x=>x.name));if(rows.length<100)break}showRepos([...new Set(names)]);$('#status').textContent=names.length+' repositori publik dari profil GitHub.'}catch{$('#status').textContent='Daftar lokal portofolio. Daftar lengkap tersedia di profil GitHub.'}})();
