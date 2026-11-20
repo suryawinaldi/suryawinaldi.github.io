@@ -15,3 +15,33 @@ img.cover{object-fit:cover;background:#20251f}
 #resources a,.profile-link{display:inline-block;padding:8px 14px;border-radius:20px;border:1px solid #718460}
 #resources a:hover,.profile-link:hover{color:var(--lime);border-color:var(--lime)}
 .profile-link{margin-top:20px}
+
+.other-project img {border-radius:12px}
+.other-project:hover h3 {color:var(--lime)}
+html:has(dialog[open]) {overflow:hidden}
+dialog {
+  color-scheme:light;
+  color:#1f2b23;
+  background:linear-gradient(90deg,#d6d2bd 0,#f1eedf 2%,#faf7eb 9%,#f6f3e6 100%);
+  width:min(740px,94vw);
+  max-height:88dvh;
+  border:1px solid #c9c6b6;
+  border-radius:4px 15px 15px 4px;
+  padding:clamp(22px,4vw,48px);
+  box-shadow:3px 3px #ceccbf,6px 6px #a8a698,0 28px 100px #0008;
+  transform-origin:left center;
+}
+dialog h2 {font:normal clamp(32px,5vw,52px)/1.08 Georgia,serif;letter-spacing:-.045em}
+dialog .eyebrow,dialog #source {color:#405a30}
+dialog #desc {color:#39483c}
+dialog #resources a:hover {color:#233b19;background:#e2e8d6}
+dialog::backdrop {background:#081109b3;backdrop-filter:blur(6px)}
+@media(prefers-reduced-motion:no-preference){
+  dialog[open] {animation:open-leaf .42s cubic-bezier(.15,.75,.2,1) both}
+  dialog[open]::backdrop {animation:veil-in .32s ease-out}
+}
+@keyframes open-leaf {
+  from {opacity:0;transform:perspective(1200px) rotateY(-22deg) translateX(18px)}
+  to {opacity:1;transform:perspective(1200px) rotateY(0) translateX(0)}
+}
+@keyframes veil-in {from {opacity:0} to {opacity:1}}

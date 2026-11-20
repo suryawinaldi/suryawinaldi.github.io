@@ -39,11 +39,9 @@ function openProject([title, , tools, repo, , summary, chart]) {
   $('#desc').textContent = summary;
   $('#source').href = base + repo;
   const img = $('#plot');
-  img.hidden = !chart;
-  if (chart) {
-    img.src = 'assets/' + chart + '.webp';
-    img.alt = 'Grafik hasil analisis ' + title;
-  }
+  img.hidden = false;
+  img.src = chart ? 'assets/' + chart + '.webp' : 'assets/cover-' + repo + '.webp';
+  img.alt = chart ? 'Grafik hasil analisis ' + title : '';
   const links = (resources[chart] || []).map(([label, path]) => {
     const link = document.createElement('a');
     link.textContent = label + ' ↗';
@@ -52,20 +50,20 @@ function openProject([title, , tools, repo, , summary, chart]) {
   });
   $('#resources').replaceChildren(...links);
   dialog.showModal();
+  dialog.scrollTop = 0;
 }
 $('#close').onclick=()=>dialog.close();
 for (const project of projects) {
-  const [title, category, tools, , summary, , chart] = project;
+  const [title, category, tools, repo, summary, , chart] = project;
   const analysis = category === 'Analisis data';
   const card = document.createElement('button');
   card.className = analysis ? 'card' : 'other-project';
-  if (chart) {
-    const image = document.createElement('img');
-    image.className = 'cover';
-    image.src = 'assets/cover-' + chart + '.webp';
-    image.alt = '';
-    card.append(image);
-  }
+  const image = document.createElement('img');
+  image.className = 'cover';
+  image.src = 'assets/cover-' + (chart || repo) + '.webp';
+  image.alt = '';
+  image.loading = 'lazy';
+  card.append(image);
   const body = document.createElement('div');
   body.className = 'copy';
   body.innerHTML = '<span class="tools"></span><h3></h3><p></p><span class="link"></span>';
