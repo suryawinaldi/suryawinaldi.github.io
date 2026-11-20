@@ -89,3 +89,31 @@ for (const project of projects) {
 function showRepos(names){$('#repos').replaceChildren(...names.map(name=>{const a=document.createElement('a');a.href=base+encodeURIComponent(name);a.textContent=name+' ↗';return a}))}
 showRepos([...projects.map(p=>p[3]),'suryawinaldi.github.io']);$('#status').textContent='Repositori dalam portofolio ini.';
 (async()=>{try{const names=[];for(let page=1;;page++){const r=await fetch('https://api.github.com/users/suryawinaldi/repos?per_page=100&sort=updated&page='+page,{signal:AbortSignal.timeout(8000)});if(!r.ok)throw Error();const rows=await r.json();names.push(...rows.map(x=>x.name));if(rows.length<100)break}showRepos([...new Set(names)]);$('#status').textContent=names.length+' repositori publik dari profil GitHub.'}catch{$('#status').textContent='Daftar lokal portofolio. Daftar lengkap tersedia di profil GitHub.'}})();
+
+// Observe viewport entry on all browsers, including those without scroll timelines.
+const revealTargets = document.querySelectorAll('.heading, .card, #lainnya h2, .other-project, #repositori');
+const revealObserver = new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    entry.target.classList.toggle('is-visible', entry.isIntersecting);
+  }
+}, { threshold: 0.08 });
+revealTargets.forEach((element, index) => {
+  element.classList.add('scroll-reveal');
+  element.style.setProperty('--reveal-delay', (index % 2) * 80 + 'ms');
+  revealObserver.observe(element);
+});
+
+let scrollFrame = null;
+function updateHeroScroll() {
+  scrollFrame = null;
+  const hero = document.querySelector('.hero');
+  const progress = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / hero.offsetHeight));
+  const intro = hero.querySelector('.intro');
+  intro.style.opacity = motion.matches ? '1' : String(1 - progress * .85);
+  intro.style.transform = motion.matches ? '' : 'translateY(' + progress * 90 + 'px)';
+}
+addEventListener('scroll', () => {
+  if (scrollFrame === null) scrollFrame = requestAnimationFrame(updateHeroScroll);
+}, { passive: true });
+motion.addEventListener('change', updateHeroScroll);
+updateHeroScroll();
