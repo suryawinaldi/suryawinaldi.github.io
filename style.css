@@ -20,32 +20,32 @@ img.cover{object-fit:cover;background:#20251f}
 .other-project:hover h3 {color:var(--lime)}
 html:has(dialog[open]) {overflow:hidden}
 dialog {
-  color-scheme:light;
-  color:#1f2b23;
-  background:linear-gradient(90deg,#d6d2bd 0,#f1eedf 2%,#faf7eb 9%,#f6f3e6 100%);
+  color-scheme:dark;
+  color:#edf1e7;
+  background:linear-gradient(120deg,#252e24,#181e19);
   width:min(740px,94vw);
   max-height:88dvh;
-  border:1px solid #c9c6b6;
+  border:1px solid #43513e;
   border-radius:4px 15px 15px 4px;
   padding:clamp(22px,4vw,48px);
-  box-shadow:3px 3px #ceccbf,6px 6px #a8a698,0 28px 100px #0008;
+  box-shadow:0 28px 100px #000a;
   transform-origin:left center;
 }
 dialog h2 {font:normal clamp(32px,5vw,52px)/1.08 Georgia,serif;letter-spacing:-.045em}
-dialog .eyebrow,dialog #source {color:#405a30}
-dialog #desc {color:#39483c}
-dialog #resources a:hover {color:#233b19;background:#e2e8d6}
+dialog .eyebrow,dialog #source {color:var(--lime)}
+dialog #desc {color:#bdc8b7}
+dialog #resources a:hover {color:var(--lime);background:#303e29}
 dialog::backdrop {background:#081109b3;backdrop-filter:blur(6px)}
 
 #resources:not(:empty){margin:16px 0}
 body{background:radial-gradient(ellipse at 80% 5%,#293327 0,transparent 32%),#101310}
 .hero{min-height:78vh;display:flex;align-items:center}
 header{position:relative;z-index:2}
-#proyek{background:#eaeadd;color:#202d24;border-radius:30px;padding:52px 32px;margin-top:28px}
-#proyek .eyebrow,#proyek h2 span{color:#526640}
+#proyek{background:#171e18;color:#edf1e7;border-radius:30px;padding:52px 32px;margin-top:28px}
+#proyek .eyebrow,#proyek h2 span{color:var(--lime)}
 #cards{gap:30px}
-.card{background:#f8f7ee;color:#202d24;border:0;border-radius:20px;box-shadow:0 8px 30px #1722150a}
-.card .tools{color:#607055}.card p{color:#52604f}.card .link{color:#3f5c28}
+.card{background:#232b22;color:#edf1e7;border:1px solid #374330;border-radius:20px;box-shadow:0 8px 30px #0002}
+.card .tools{color:#b8c6ac}.card p{color:#bcc6b5}.card .link{color:var(--lime)}
 .card h3{font-size:28px}
 .card .copy{padding:26px}
 .card .cover{aspect-ratio:1.65;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
