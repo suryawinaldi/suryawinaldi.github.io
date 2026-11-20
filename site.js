@@ -24,13 +24,24 @@ function redraw(){cancelAnimationFrame(frame);draw(motion.matches?0:performance.
 new ResizeObserver(redraw).observe(wave);new IntersectionObserver(([e])=>{visible=e.isIntersecting;redraw()}).observe(wave);motion.addEventListener('change',redraw);document.addEventListener('visibilitychange',redraw);
 const dialog=$('dialog');
 const resources = {
-  olist: [['Laporan Power BI (PDF)', 'report/Laporan_Olist_PowerBI.pdf']],
-  retail: [
-    ['Jelajahi dashboard', './dashboard/retail/'],
-    ['Laporan retensi (PDF)', 'reports/Laporan_Retensi_Pelanggan.pdf']
+  olist: [
+    ['Notebook analisis', 'notebooks/Analisis_Olist.ipynb'],
+    ['Laporan analisis (PDF)', 'report/Laporan_Olist_PowerBI.pdf'],
+    ['Proyek dashboard (Power BI Desktop)', 'Olist.pbip']
   ],
-  mlbb: [['Baca notebook evaluasi model', 'notebooks/01_mobile_legends_reviews.ipynb']],
-  happiness: [['Laporan World Happiness (PDF)', 'reports/Laporan_World_Happiness_Analysis.pdf']]
+  retail: [
+    ['Notebook retensi', 'notebooks/Analisis_Retensi_Pelanggan.ipynb'],
+    ['Laporan retensi (PDF)', 'reports/Laporan_Retensi_Pelanggan.pdf'],
+    ['Buka dashboard interaktif', './dashboard/retail/']
+  ],
+  mlbb: [
+    ['Notebook evaluasi model', 'notebooks/01_mobile_legends_reviews.ipynb'],
+    ['Unduh laporan (Word)', 'reports/Laporan_Analisis_Ulasan_Mobile_Legends.docx']
+  ],
+  happiness: [
+    ['Notebook analisis', 'notebooks/01_world_happiness_analysis.ipynb'],
+    ['Laporan World Happiness (PDF)', 'reports/Laporan_World_Happiness_Analysis.pdf']
+  ]
 };
 
 function openProject([title, , tools, repo, , summary, chart]) {
@@ -45,7 +56,7 @@ function openProject([title, , tools, repo, , summary, chart]) {
   const links = (resources[chart] || []).map(([label, path]) => {
     const link = document.createElement('a');
     link.textContent = label + ' ↗';
-    link.href = path.startsWith('./') ? path : base + repo + '/blob/main/' + path;
+    link.href = path.startsWith('./') ? path : base + repo + (path.endsWith('.docx') ? '/raw/refs/heads/main/' : '/blob/main/') + path;
     return link;
   });
   $('#resources').replaceChildren(...links);

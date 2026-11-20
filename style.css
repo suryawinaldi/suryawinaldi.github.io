@@ -36,12 +36,29 @@ dialog .eyebrow,dialog #source {color:#405a30}
 dialog #desc {color:#39483c}
 dialog #resources a:hover {color:#233b19;background:#e2e8d6}
 dialog::backdrop {background:#081109b3;backdrop-filter:blur(6px)}
-@media(prefers-reduced-motion:no-preference){
-  dialog[open] {animation:open-leaf .42s cubic-bezier(.15,.75,.2,1) both}
-  dialog[open]::backdrop {animation:veil-in .32s ease-out}
+/* Each section settles into view, then dims as its last lines scroll away. */
+@supports (animation-timeline: view()) {
+  @media screen and (prefers-reduced-motion: no-preference) {
+    main > section {
+      animation: section-passage linear both;
+      animation-timeline: view(block);
+      animation-range: entry 0% exit 100%;
+    }
+    @keyframes section-passage {
+      entry 0% {
+        opacity: .48;
+        transform: perspective(1400px) translateY(16px) rotateX(2deg);
+        transform-origin: center top;
+      }
+      entry 32%, exit 68% {
+        opacity: 1;
+        transform: none;
+      }
+      exit 100% {
+        opacity: .32;
+        transform: translateY(-8px);
+      }
+    }
+  }
 }
-@keyframes open-leaf {
-  from {opacity:0;transform:perspective(1200px) rotateY(-22deg) translateX(18px)}
-  to {opacity:1;transform:perspective(1200px) rotateY(0) translateX(0)}
-}
-@keyframes veil-in {from {opacity:0} to {opacity:1}}
+#resources:not(:empty){margin:16px 0}
