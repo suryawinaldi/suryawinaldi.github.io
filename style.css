@@ -69,3 +69,5 @@ header{position:relative;z-index:2}
  .scroll-reveal{opacity:1;transform:none;transition:none}
  .card .cover{transition:none}
 }
+
+#desc section{margin:0 0 20px}#desc h3{font-size:15px;color:#e0eccf;margin-bottom:7px}#desc p{line-height:1.7}

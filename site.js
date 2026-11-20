@@ -44,10 +44,42 @@ const resources = {
   ]
 };
 
+const caseStudies = {
+  olist: {
+    description: 'Analisis operasional e-commerce Olist untuk memahami keterlambatan pengiriman dan menentukan wilayah yang perlu ditinjau.',
+    method: 'Rekonsiliasi data pesanan dengan SQL, perbandingan tanggal aktual dan estimasi, serta dashboard Power BI untuk menelusuri pola wilayah dan tahapan pengiriman.'
+  },
+  retail: {
+    description: 'Analisis transaksi Online Retail II untuk memahami pembelian ulang, kontribusi pelanggan, dan prioritas evaluasi reaktivasi.',
+    method: 'Pembersihan transaksi dengan SQL dan Python, analisis cohort pembelian ulang, segmentasi RFM, serta evaluasi kestabilan segmen dan pembelian pada periode berikutnya.'
+  },
+  mlbb: {
+    description: 'Klasifikasi teks ulasan Mobile Legends ke kelompok rating untuk mengevaluasi seberapa baik bahasa pemain mencerminkan penilaian mereka.',
+    method: 'TF-IDF kata dan karakter dengan kandidat logistic regression dan Linear SVM. Pemilihan memakai macro F1 validasi Mei, lalu pengujian pada Juni dan perbandingan dengan baseline mayoritas.'
+  },
+  happiness: {
+    description: 'Analisis World Happiness Report untuk membandingkan evaluasi hidup antarnegara dan menelusuri perubahannya dari waktu ke waktu.',
+    method: 'Analisis deskriptif dengan Python, perbandingan negara berpasangan, pemeriksaan panel seimbang, dan analisis sensitivitas periode pembanding.'
+  }
+};
+
 function openProject([title, , tools, repo, , summary, chart]) {
   $('#dtype').textContent = tools;
   $('#dtitle').textContent = title;
-  $('#desc').textContent = summary;
+  const detail = caseStudies[chart];
+  $('#desc').replaceChildren();
+  const sections = detail
+    ? [['Tentang proyek', detail.description], ['Metode', detail.method], ['Hasil utama', summary]]
+    : [['Tentang proyek', summary]];
+  for (const [heading, text] of sections) {
+    const section = document.createElement('section');
+    const label = document.createElement('h3');
+    const paragraph = document.createElement('p');
+    label.textContent = heading;
+    paragraph.textContent = text;
+    section.append(label, paragraph);
+    $('#desc').append(section);
+  }
   $('#source').href = base + repo;
   const img = $('#plot');
   img.hidden = false;
@@ -80,8 +112,8 @@ for (const project of projects) {
   body.innerHTML = '<span class="tools"></span><h3></h3><p></p><span class="link"></span>';
   body.querySelector('.tools').textContent = tools;
   body.querySelector('h3').textContent = title;
-  body.querySelector('p').textContent = summary;
-  body.querySelector('.link').textContent = analysis ? 'Baca analisis ↗' : 'Detail proyek ↗';
+  body.querySelector('p').textContent = caseStudies[chart]?.description || summary;
+  body.querySelector('.link').textContent = analysis ? 'Tentang proyek ↗' : 'Detail proyek ↗';
   card.append(body);
   card.onclick = () => openProject(project);
   $(analysis ? '#cards' : '#other-projects').append(card);
