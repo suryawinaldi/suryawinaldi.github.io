@@ -62,8 +62,8 @@ for (const project of projects) {
   if (chart) {
     const image = document.createElement('img');
     image.className = 'cover';
-    image.src = 'assets/' + chart + '.webp';
-    image.alt = 'Grafik' + ' ' + title;
+    image.src = 'assets/cover-' + chart + '.webp';
+    image.alt = '';
     card.append(image);
   }
   const body = document.createElement('div');
